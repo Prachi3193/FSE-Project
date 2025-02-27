@@ -1,40 +1,35 @@
+// controllers/productController.js
 const Product = require('../models/productModel');
 
-exports.getProducts = (req, res) => {
-    Product.getAllProducts((err, products) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json(products);
-    });
+// CREATE
+exports.createProduct = async (req, res) => {
+  try {
+    const newProduct = await Product.create(req.body);
+    res.status(201).json(newProduct);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
 
-exports.getProductById = (req, res) => {
-    const { id } = req.params;
-    Product.getProductById(id, (err, product) => {
-        if (err) return res.status(500).json({ error: err.message });
-        if (!product) return res.status(404).json({ message: 'Product not found' });
-        res.json(product);
-    });
+// READ (All)
+exports.getAllProducts = async (req, res) => {
+  try {
+    const products = await Product.findAll();
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
 
-exports.addProduct = (req, res) => {
-    Product.addProduct(req.body, (err, result) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.status(201).json(result);
-    });
-};
-
-exports.updateProduct = (req, res) => {
-    const { id } = req.params;
-    Product.updateProduct(id, req.body, (err, result) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json(result);
-    });
-};
-
-exports.deleteProduct = (req, res) => {
-    const { id } = req.params;
-    Product.deleteProduct(id, (err, result) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json(result);
-    });
+// READ (By ID)
+exports.getProductById = async (req, res) => {
+  try {
+    const product = await Product.findByPk(req.params.id);
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found' });
+    }
+    res.status(200).json(product);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };

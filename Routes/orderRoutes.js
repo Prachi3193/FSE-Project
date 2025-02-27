@@ -1,12 +1,13 @@
+// Routes/orderRoutes.js
 const express = require('express');
-const { getOrders, getOrderById, getOrdersByUserId, createOrder, updateOrderStatus, deleteOrder } = require('../controllers/orderController');
 const router = express.Router();
+const orderController = require('../controllers/orderController');
 
-router.get('/', getOrders);
-router.get('/:id', getOrderById);
-router.get('/user/:userId', getOrdersByUserId);
-router.post('/', createOrder);
-router.put('/:id/status', updateOrderStatus);
-router.delete('/:id', deleteOrder);
+router.post('/', orderController.create);
+router.get('/', orderController.findAll);
+router.get('/user/:userId', orderController.findByUserId); // For orders by a specific user
+router.get('/:id', orderController.findOne);
+router.put('/:id', orderController.updateStatus);
+router.delete('/:id', orderController.delete);
 
 module.exports = router;

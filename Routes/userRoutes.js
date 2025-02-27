@@ -1,10 +1,9 @@
-//Routes for user authentication & management
+// Routes/userRoutes.js
 const express = require('express');
-const { registerUser, loginUser } = require('../controllers/userController');
 const router = express.Router();
+const userController = require('../controllers/userController');
 
-router.post('/register', registerUser);
-router.post('/login', loginUser);
+router.post('/register', userController.registerUser);
+router.post('/login', userController.loginUser);
 
 module.exports = router;
-

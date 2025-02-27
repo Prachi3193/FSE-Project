@@ -1,49 +1,75 @@
+// controllers/orderController.js
 const Order = require('../models/orderModel');
 
-exports.getOrders = (req, res) => {
-    Order.getAllOrders((err, orders) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json(orders);
-    });
+// Create a new order
+exports.create = async (req, res) => {
+    try {
+        const order = await Order.create(req.body);
+        res.status(201).json(order);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
 };
 
-exports.getOrderById = (req, res) => {
-    const { id } = req.params;
-    Order.getOrderById(id, (err, order) => {
-        if (err) return res.status(500).json({ error: err.message });
-        if (!order) return res.status(404).json({ message: 'Order not found' });
-        res.json(order);
-    });
+// Get all orders
+exports.findAll = async (req, res) => {
+    try {
+        const orders = await Order.findAll();
+        res.status(200).json(orders);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
 };
 
-exports.getOrdersByUserId = (req, res) => {
-    const { userId } = req.params;
-    Order.getOrdersByUserId(userId, (err, orders) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json(orders);
-    });
+// Get a single order by ID
+exports.findOne = async (req, res) => {
+    try {
+        const order = await Order.findByPk(req.params.id);
+        if (!order) {
+            return res.status(404).json({ error: 'Order not found' });
+        }
+        res.status(200).json(order);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
 };
 
-exports.createOrder = (req, res) => {
-    Order.createOrder(req.body, (err, result) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.status(201).json(result);
-    });
+// Get orders by User ID
+exports.findByUserId = async (req, res) => {
+    try {
+        const orders = await Order.findAll({ where: { user_id: req.params.userId } });
+        res.status(200).json(orders);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
 };
 
-exports.updateOrderStatus = (req, res) => {
-    const { id } = req.params;
-    const { status } = req.body;
-    Order.updateOrderStatus(id, status, (err, result) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json(result);
-    });
+// Update order status
+exports.updateStatus = async (req, res) => {
+    try {
+        const [updated] = await Order.update({ status: req.body.status }, {
+            where: { order_id: req.params.id }
+        });
+        if (updated) {
+            const updatedOrder = await Order.findByPk(req.params.id);
+            return res.status(200).json(updatedOrder);
+        }
+        res.status(404).json({ message: 'Order not found' });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
 };
 
-exports.deleteOrder = (req, res) => {
-    const { id } = req.params;
-    Order.deleteOrder(id, (err, result) => {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json(result);
-    });
+// Delete an order
+exports.delete = async (req, res) => {
+    try {
+        const order = await Order.findByPk(req.params.id);
+        if (!order) {
+            return res.status(404).json({ error: 'Order not found' });
+        }
+        await order.destroy();
+        res.status(200).json({ message: 'Order deleted successfully' });
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
 };

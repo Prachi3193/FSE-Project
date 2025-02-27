@@ -1,48 +1,55 @@
-const db = require('../config/db');
+// models/productModel.js
+const { DataTypes } = require('sequelize');
+const sequelize = require('../config/db');
 
-// Get all products
-exports.getAllProducts = (callback) => {
-    const query = 'SELECT * FROM products';
-    db.query(query, (err, results) => {
-        if (err) return callback(err, null);
-        callback(null, results);
-    });
-};
+const Product = sequelize.define('product', {
+  product_id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  product_name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: {
+        msg: 'Product name cannot be empty'
+      }
+    }
+  },
+  price: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+    validate: {
+      isFloat: {
+        msg: 'Price must be a valid number'
+      },
+      min: {
+        args: [0],
+        msg: 'Price must be a positive number'
+      }
+    }
+  },
+  stock: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    validate: {
+      isInt: {
+        msg: 'Stock must be an integer'
+      },
+      min: {
+        args: [0],
+        msg: 'Stock cannot be negative'
+      }
+    }
+  },
+  description: {
+    type: DataTypes.STRING,
+    allowNull: true // Optional field for product description
+  }
+}, {
+  tableName: 'products',
+  timestamps: false
+});
 
-// Get a single product by ID
-exports.getProductById = (productId, callback) => {
-    const query = 'SELECT * FROM products WHERE product_id = ?';
-    db.query(query, [productId], (err, result) => {
-        if (err) return callback(err, null);
-        callback(null, result[0]);
-    });
-};
-
-// Add a new product
-exports.addProduct = (productData, callback) => {
-    const { name, description, price, stock, category, brand, image_url } = productData;
-    const query = 'INSERT INTO products (name, description, price, stock, category, brand, image_url) VALUES (?, ?, ?, ?, ?, ?, ?)';
-    db.query(query, [name, description, price, stock, category, brand, image_url], (err, result) => {
-        if (err) return callback(err, null);
-        callback(null, { message: 'Product added successfully', productId: result.insertId });
-    });
-};
-
-// Update an existing product
-exports.updateProduct = (productId, productData, callback) => {
-    const { name, description, price, stock, category, brand, image_url } = productData;
-    const query = 'UPDATE products SET name=?, description=?, price=?, stock=?, category=?, brand=?, image_url=? WHERE product_id=?';
-    db.query(query, [name, description, price, stock, category, brand, image_url, productId], (err, result) => {
-        if (err) return callback(err, null);
-        callback(null, { message: 'Product updated successfully' });
-    });
-};
-
-// Delete a product
-exports.deleteProduct = (productId, callback) => {
-    const query = 'DELETE FROM products WHERE product_id = ?';
-    db.query(query, [productId], (err, result) => {
-        if (err) return callback(err, null);
-        callback(null, { message: 'Product deleted successfully' });
-    });
-};
+module.exports = Product;
