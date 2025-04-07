@@ -18,6 +18,9 @@ const Company = db.define('Company', {
     type: DataTypes.INTEGER,
     allowNull: false
   }
+},{
+  tableName:'companies',
+  timestamps:false
 });
 
-module.exports = { Company };
+module.exports = Company;

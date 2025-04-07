@@ -4,6 +4,13 @@ const Order = require('../models/orderModel');
 // Create a new order
 exports.create = async (req, res) => {
     try {
+        const { user_id, total_price, status } = req.body;
+
+        // Validate required fields
+        if (!user_id || !total_price || !status) {
+            return res.status(400).json({ error: 'Missing required fields: user_id, total_price, status' });
+        }
+
         const order = await Order.create(req.body);
         res.status(201).json(order);
     } catch (error) {
@@ -38,6 +45,9 @@ exports.findOne = async (req, res) => {
 exports.findByUserId = async (req, res) => {
     try {
         const orders = await Order.findAll({ where: { user_id: req.params.userId } });
+        if (orders.length === 0) {
+            return res.status(404).json({ message: 'No orders found for this user' });
+        }
         res.status(200).json(orders);
     } catch (error) {
         res.status(400).json({ error: error.message });
@@ -47,6 +57,10 @@ exports.findByUserId = async (req, res) => {
 // Update order status
 exports.updateStatus = async (req, res) => {
     try {
+        const { status } = req.body;
+        if (!status) {
+            return res.status(400).json({ error: 'Status is required' });
+        }
         const [updated] = await Order.update({ status: req.body.status }, {
             where: { order_id: req.params.id }
         });

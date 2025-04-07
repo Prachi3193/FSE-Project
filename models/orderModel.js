@@ -1,8 +1,9 @@
 // models/orderModel.js
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = require('../config/db'); // Use the correct path to db.js
+const User=require('./userModels');
 
-const Order = sequelize.define('order', {
+const Order = sequelize.define('Order', {
     order_id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -10,7 +11,11 @@ const Order = sequelize.define('order', {
     },
     user_id: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+            model: User,
+            key: 'user_id'
+        },
     },
     total_price: {
         type: DataTypes.FLOAT,
@@ -18,7 +23,8 @@ const Order = sequelize.define('order', {
     },
     status: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 'pending'
     },
     created_at: {
         type: DataTypes.DATE,
@@ -26,7 +32,10 @@ const Order = sequelize.define('order', {
     }
 }, {
     tableName: 'orders',
-    timestamps: false
+    timestamps: false,
+    underscored: true
 });
 
+User.hasMany(Order, { foreignKey: 'user_id' });
+Order.belongsTo(User, { foreignKey: 'user_id' });
 module.exports = Order;

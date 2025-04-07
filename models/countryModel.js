@@ -1,5 +1,5 @@
 const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = require('../configs/database');
+const sequelize = require('../config/db');
 
 const Country = sequelize.define('country', {
     countryid: {
@@ -7,13 +7,13 @@ const Country = sequelize.define('country', {
         primaryKey: true,
         autoIncrement: true
     },
-    countryName: { // Fixed typo
+    countryName: { 
         type: DataTypes.STRING,
         allowNull: false
     }
 }, {
     tableName: 'country',
-    timestamps: false // Add this if you don't want createdAt and updatedAt columns
+    timestamps: false 
 });
 
 module.exports = Country;
