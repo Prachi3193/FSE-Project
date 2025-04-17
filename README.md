@@ -42,7 +42,11 @@ A modern and responsive food ordering platform designed to connect hungry users 
 ```bash
 git clone https://github.com/your-username/food-ecommerce-app.git
 cd food-ecommerce-app
-2. **Install Backend Dependencies**
-npm install
+
+2. **Clone the repository**
+
+```bash
+git clone https://github.com/your-username/food-ecommerce-app.git
+cd food-ecommerce-app
 
 
