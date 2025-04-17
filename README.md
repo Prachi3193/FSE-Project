@@ -3,6 +3,11 @@
 A modern and responsive food ordering platform designed to connect hungry users with their favorite meals from local restaurants and vendors. Our app provides a seamless, user-friendly experience for browsing, ordering, and tracking food deliveries in real-time.
 
 ---
+## 🧾 Project Overview
+
+This e-commerce platform connects artisans and craft enthusiasts with quality supplies. Developed as part of coursework at **Chitkara University, Department of Computer Science and Engineering**.
+
+---
 
 ## 🚀 Features
 
@@ -42,11 +47,36 @@ A modern and responsive food ordering platform designed to connect hungry users 
 ```bash
 git clone https://github.com/your-username/food-ecommerce-app.git
 cd food-ecommerce-app
-
-2. **Clone the repository**
-
+```
+### 📦 Install Backend Dependencies
 ```bash
-git clone https://github.com/your-username/food-ecommerce-app.git
-cd food-ecommerce-app
+npm install
+```
+### 🎨 Install Frontend Dependencies
+```bash
+cd views
+npm install
+```
+### 🔐 Environment Variables
+Create a `.env` file inside `backend/` directory:
+```env
+DB_HOST=localhost
+DB_USER=root
+DB_PASS=yourpassword
+DB_NAME=yourdbname
+JWT_SECRET=your_jwt_secret
+```
+## 🚀 Running the Application
+
+| Task             | Command                              |
+|------------------|--------------------------------------|
+| Start Backend    | `node server.js`          	          |
+| Start Frontend   | `cd views && npm run dev`            |
+| Open App         | Visit 👉 [http://localhost:5173](http://localhost:5173) |
 
 
+## 🛣️ Future Roadmap
+
+- 💳 Payment Gateway Integration (e.g. Razorpay, Stripe)
+- 🌟 User Reviews & Ratings
+- ❤️ Wishlist Functionality
